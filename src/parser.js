@@ -3,7 +3,7 @@ const parser = (testUrl) => {
   const myUrl = new URL(testUrl);
 
   const arr = myUrl.search.replace("?", "").split("&");
-
+  console.log(arr);
   const obj = arr.reduce((acc, item) => {
     let itemArr = item.split("=");
     const isDot = itemArr[0].indexOf(".");
@@ -44,6 +44,16 @@ const parser = (testUrl) => {
             [key]: value,
           };
           break;
+      }
+    }
+    if (isDot !== -1) {
+      const arrWithDot = itemArr[0].split(".");
+      const firstKey = arrWithDot[0];
+      const secondKey = arrWithDot[1];
+      const value = itemArr[1];
+
+      if (!isNaN(Number(value))) {
+        acc = { ...acc, [firstKey]: { [secondKey]: Number(value) } };
       }
     }
 
