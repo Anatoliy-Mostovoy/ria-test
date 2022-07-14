@@ -51,9 +51,37 @@ const parser = (testUrl) => {
       const firstKey = arrWithDot[0];
       const secondKey = arrWithDot[1];
       const value = itemArr[1];
+      switch (true) {
+        case !value:
+          break;
+        case value[0] === '"' && value[value.length - 1] === '"':
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: value.replace(/['"]+/g, "") },
+          };
+          break;
+        case !isNaN(Number(value)):
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: Number(value) },
+          };
+          break;
+        case value === "true":
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: true },
+          };
+          break;
+        case value === "false":
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: false },
+          };
+          break;
 
-      if (!isNaN(Number(value))) {
-        acc = { ...acc, [firstKey]: { [secondKey]: Number(value) } };
+        default:
+          acc = { ...acc, [firstKey]: { [secondKey]: value } };
+          break;
       }
     }
 
