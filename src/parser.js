@@ -1,19 +1,55 @@
-// const myUrl = new URL(
-//   "http://myurl.com?foo.sos=42&foo=hello&bar='true'&baz=11"
-// );
-// const params = {};
-// console.log(myUrl.search.replace("?", "").split("&"));
-// const url = myUrl.search.replace("?", "").split("&");
-// url.forEach((el, elIndex) => {
-//   const haveDot = el.indexOf(".");
-//   if (haveDot === -1) {
-//     const arr = el.split("=");
-//     params[arr[0]] = arr[1];
-//   }
-//   return;
-// });
-// console.log(params);
+const parser = (testUrl) => {
+  const myUrl = new URL(testUrl);
 
-const a = "11";
-const b = Number(a);
-console.log(!isNaN(b));
+  const arr = myUrl.search.replace("?", "").split("&");
+  console.log("parser.js--->11", arr);
+
+  const obj = arr.reduce((acc, item) => {
+    let itemArr = item.split("=");
+    const isDot = itemArr[0].indexOf(".");
+    if (isDot === -1) {
+      const key = itemArr[0];
+      const value = itemArr[1];
+      switch (true) {
+        case !value:
+          break;
+        case !isNaN(Number(value)):
+          acc = {
+            ...acc,
+            [key]: Number(value),
+          };
+          break;
+        case value[0] === '"' && value[value.length - 1] === '"':
+          acc = {
+            ...acc,
+            [key]: value.replace(/['"]+/g, ""),
+          };
+          break;
+        case value === "true":
+          acc = {
+            ...acc,
+            [key]: true,
+          };
+          break;
+        case value === "false":
+          acc = {
+            ...acc,
+            [key]: false,
+          };
+          break;
+        default:
+          acc = {
+            ...acc,
+            [key]: value,
+          };
+          break;
+      }
+    }
+
+    return acc;
+  }, {});
+  console.log("JSON:", JSON.stringify(obj, null, 2));
+  return Object.keys(obj)[0] ? obj : null;
+};
+
+module.exports = parser;
