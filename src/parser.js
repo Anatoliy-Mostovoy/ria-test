@@ -7,10 +7,11 @@ const parser = (testUrl) => {
   const obj = arr.reduce((acc, item) => {
     let itemArr = item.split("=");
     const isDot = itemArr[0].indexOf(".");
+    const value = itemArr[1];
 
     if (isDot === -1) {
       const key = itemArr[0];
-      const value = itemArr[1];
+
       switch (true) {
         case !value:
           break;
@@ -26,6 +27,18 @@ const parser = (testUrl) => {
             [key]: value.replace(/['"]+/g, ""),
           };
           break;
+        // case value[0] === "%" && value[value.length - 1] === "2":
+        //   acc = {
+        //     ...acc,
+        //     [key]: value.replace(/[%22]+/g, ""),
+        //   };
+        //   break;
+        // case value[0] === "%" && value[value.length - 1] === "7":
+        //   acc = {
+        //     ...acc,
+        //     [key]: value.replace(/[%27]+/g, ""),
+        //   };
+        //   break;
         case value === "true":
           acc = {
             ...acc,
@@ -52,7 +65,7 @@ const parser = (testUrl) => {
     if (arrWithDot.length === 2) {
       const firstKey = arrWithDot[0];
       const secondKey = arrWithDot[1];
-      const value = itemArr[1];
+
       switch (true) {
         case !value:
           break;
@@ -62,6 +75,18 @@ const parser = (testUrl) => {
             [firstKey]: { [secondKey]: value.replace(/['"]+/g, "") },
           };
           break;
+        // case value[0] === "%" && value[value.length - 1] === "2":
+        //   acc = {
+        //     ...acc,
+        //     [firstKey]: { [secondKey]: value.replace(/[%22]+/g, "") },
+        //   };
+        //   break;
+        // case value[0] === "%" && value[value.length - 1] === "7":
+        //   acc = {
+        //     ...acc,
+        //     [firstKey]: { [secondKey]: value.replace(/[%27]+/g, "") },
+        //   };
+        //   break;
         case !isNaN(Number(value)):
           acc = {
             ...acc,
@@ -88,11 +113,9 @@ const parser = (testUrl) => {
     }
 
     if (arrWithDot.length === 3) {
-      console.log(arrWithDot);
       const firstKey = arrWithDot[0];
       const secondKey = arrWithDot[1];
       const thirdKey = arrWithDot[2];
-      const value = itemArr[1];
 
       switch (true) {
         case !value:
@@ -105,6 +128,22 @@ const parser = (testUrl) => {
             },
           };
           break;
+        // case value[0] === "%" && value[value.length - 1] === "2":
+        //   acc = {
+        //     ...acc,
+        //     [firstKey]: {
+        //       [secondKey]: { [thirdKey]: value.replace(/[%22]+/g, "") },
+        //     },
+        //   };
+        //   break;
+        // case value[0] === "%" && value[value.length - 1] === "7":
+        //   acc = {
+        //     ...acc,
+        //     [firstKey]: {
+        //       [secondKey]: { [thirdKey]: value.replace(/[%27]+/g, "") },
+        //     },
+        //   };
+        //   break;
         case !isNaN(Number(value)):
           acc = {
             ...acc,
