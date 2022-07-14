@@ -1,8 +1,8 @@
 const parser = (testUrl) => {
+  console.log(testUrl);
   const myUrl = new URL(testUrl);
 
   const arr = myUrl.search.replace("?", "").split("&");
-  console.log("parser.js--->11", arr);
 
   const obj = arr.reduce((acc, item) => {
     let itemArr = item.split("=");
