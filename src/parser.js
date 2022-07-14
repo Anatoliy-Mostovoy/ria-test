@@ -46,8 +46,10 @@ const parser = (testUrl) => {
           break;
       }
     }
-    if (isDot !== -1) {
-      const arrWithDot = itemArr[0].split(".");
+
+    const arrWithDot = itemArr[0].split(".");
+
+    if (arrWithDot.length === 2) {
       const firstKey = arrWithDot[0];
       const secondKey = arrWithDot[1];
       const value = itemArr[1];
@@ -81,6 +83,51 @@ const parser = (testUrl) => {
 
         default:
           acc = { ...acc, [firstKey]: { [secondKey]: value } };
+          break;
+      }
+    }
+
+    if (arrWithDot.length === 3) {
+      console.log(arrWithDot);
+      const firstKey = arrWithDot[0];
+      const secondKey = arrWithDot[1];
+      const thirdKey = arrWithDot[2];
+      const value = itemArr[1];
+
+      switch (true) {
+        case !value:
+          break;
+        case value[0] === '"' && value[value.length - 1] === '"':
+          acc = {
+            ...acc,
+            [firstKey]: {
+              [secondKey]: { [thirdKey]: value.replace(/['"]+/g, "") },
+            },
+          };
+          break;
+        case !isNaN(Number(value)):
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: { [thirdKey]: Number(value) } },
+          };
+          break;
+        case value === "true":
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: { [thirdKey]: true } },
+          };
+          break;
+        case value === "false":
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: { [thirdKey]: false } },
+          };
+          break;
+        default:
+          acc = {
+            ...acc,
+            [firstKey]: { [secondKey]: { [thirdKey]: value } },
+          };
           break;
       }
     }
