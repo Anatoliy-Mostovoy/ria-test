@@ -7,6 +7,7 @@ const parser = (testUrl) => {
   const obj = arr.reduce((acc, item) => {
     let itemArr = item.split("=");
     const isDot = itemArr[0].indexOf(".");
+
     if (isDot === -1) {
       const key = itemArr[0];
       const value = itemArr[1];
@@ -48,6 +49,7 @@ const parser = (testUrl) => {
 
     return acc;
   }, {});
+
   console.log("JSON:", JSON.stringify(obj, null, 2));
   return Object.keys(obj)[0] ? obj : null;
 };
