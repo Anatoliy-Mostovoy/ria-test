@@ -55,42 +55,31 @@ const parser = (testUrl) => {
           });
       }
     }
-      if (arrWithDot.length === 3) {
-          const firstKey = arrWithDot[0]
-          const secondKey = arrWithDot[1]
-          const thirdKey = arrWithDot[2]
-        switch (true) {
-        //   case value[0] === '"' && value[value.length - 1] === '"':
-        //     return (urlParams[arrWithDot[0]] = {
-        //       ...urlParams[arrWithDot[0]],
-        //       [arrWithDot[1]]: value.replace(/['"]+/g, ""),
-        //     });
-          case !isNaN(Number(value)):
-                return (urlParams[firstKey] = {
-                    ...urlParams[firstKey],
-                    urlParams[arrWithDot[1]] 
 
-                    {[arrWithDot[2]]: Number(value)
-                },
-            });
-        //   case value === "true":
-        //     return (urlParams[arrWithDot[0]] = {
-        //       ...urlParams[arrWithDot[0]],
-        //       [arrWithDot[1]]: true,
-        //     });
-        //   case value === "false":
-        //     return (urlParams[arrWithDot[0]] = {
-        //       ...urlParams[arrWithDot[0]],
-        //       [arrWithDot[1]]: false,
-        //     });
-        //   default:
-        //     return (urlParams[arrWithDot[0]] = {
-        //       ...urlParams[arrWithDot[0]],
-        //       [arrWithDot[1]]: value,
-        //     });
+    if (arrWithDot.length === 3) {
+      const secondObj = arrWithDot.reduce((acc, item) => {
+        switch (true) {
+          case !isNaN(Number(value)):
+            return {
+              ...acc,
+              [arrWithDot[1]]: {
+                [arrWithDot[2]]: Number(value),
+              },
+            };
+
+            break;
+
+          default:
+            break;
         }
-      }
+      }, {});
+      return (urlParams[arrWithDot[0]] = {
+        ...urlParams[arrWithDot[0]],
+        ...secondObj,
+      });
+    }
   });
+
   console.log(JSON.stringify(urlParams, null, 2));
 
   return Object.keys(urlParams)[0] ? urlParams : null;
