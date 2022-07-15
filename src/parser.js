@@ -59,6 +59,13 @@ const parser = (testUrl) => {
     if (arrWithDot.length === 3) {
       const secondObj = arrWithDot.reduce((acc, item) => {
         switch (true) {
+          case value[0] === '"' && value[value.length - 1] === '"':
+            return {
+              ...acc,
+              [arrWithDot[1]]: {
+                [arrWithDot[2]]: value.replace(/['"]+/g, ""),
+              },
+            };
           case !isNaN(Number(value)):
             return {
               ...acc,
@@ -67,10 +74,29 @@ const parser = (testUrl) => {
               },
             };
 
-            break;
+          case value === "true":
+            return {
+              ...acc,
+              [arrWithDot[1]]: {
+                [arrWithDot[2]]: true,
+              },
+            };
+
+          case value === "false":
+            return {
+              ...acc,
+              [arrWithDot[1]]: {
+                [arrWithDot[2]]: false,
+              },
+            };
 
           default:
-            break;
+            return {
+              ...acc,
+              [arrWithDot[1]]: {
+                [arrWithDot[2]]: value,
+              },
+            };
         }
       }, {});
       return (urlParams[arrWithDot[0]] = {
