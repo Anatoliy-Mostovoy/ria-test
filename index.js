@@ -1,5 +1,3 @@
 const parser = require("./src/parser");
 // return parser(process.argv[2]);
-return parser(
-  'http://myurl.com?foo=42&foo.rrr=hello&bar="true"&baz.ddd.sss=11&baz.zzz.aaa=11&rrr="24"'
-);
+return parser("http://myurl.com?baz.ddd.sss=55&baz.ddd.TTT=11");

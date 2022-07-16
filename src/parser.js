@@ -1,9 +1,10 @@
 const parser = (testUrl) => {
-  const url = new URL(testUrl);
-
   if (!validURL(testUrl)) {
     throw new Error("Invalid URL");
   }
+
+  const url = new URL(testUrl);
+
   const urlParams = {};
 
   url.searchParams.forEach((value, name) => {
@@ -74,6 +75,7 @@ const parser = (testUrl) => {
             return {
               ...acc,
               [arrWithDot[1]]: {
+                ...acc[arrWithDot[1]],
                 [arrWithDot[2]]: Number(value),
               },
             };
@@ -103,6 +105,7 @@ const parser = (testUrl) => {
             };
         }
       }, {});
+
       return (urlParams[arrWithDot[0]] = {
         ...urlParams[arrWithDot[0]],
         ...secondObj,
