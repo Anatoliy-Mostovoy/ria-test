@@ -1,7 +1,7 @@
 const parser = (testUrl) => {
   const url = new URL(testUrl);
 
-  if (!validURL(url)) {
+  if (!validURL(testUrl)) {
     throw new Error("Invalid URL");
   }
   const urlParams = {};
@@ -61,7 +61,7 @@ const parser = (testUrl) => {
     }
 
     if (arrWithDot.length === 3) {
-      const secondObj = arrWithDot.reduce((acc, item) => {
+      const secondObj = arrWithDot.reduce((acc) => {
         switch (true) {
           case value[0] === '"' && value[value.length - 1] === '"':
             return {
@@ -115,18 +115,36 @@ const parser = (testUrl) => {
   return Object.keys(urlParams)[0] ? urlParams : null;
 };
 
-//* validation
+//* validation NEW
 function validURL(str) {
-  const pattern = new RegExp(
-    "^(https?:\\/\\/)?" + // protocol
-      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-      "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-      "(\\#[-a-z\\d_]*)?$",
-    "i"
-  ); // fragment locator
-  return pattern.test(str);
+  let result = true;
+
+  const parsUrl = str.substring(str.indexOf("?") + 1);
+  //* check more then one "?"
+  if (parsUrl.includes("?")) {
+    return (result = false);
+  }
+
+  parsUrl.split("&").forEach((el) => {
+    //*check more then one "="
+    if (el.split("").filter((e) => e === "=").length > 1) {
+      return (result = false);
+    }
+    //*check on " or '
+    const firstSymbol = el.indexOf("=") + 1;
+    if (
+      el[firstSymbol] === '"' ||
+      el[firstSymbol] === "'" ||
+      el[el.length - 1] === '"' ||
+      el[el.length - 1] === "'"
+    ) {
+      if (el[firstSymbol] !== el[el.length - 1]) {
+        return (result = false);
+      }
+    }
+  });
+
+  return result;
 }
 //* validation
 
