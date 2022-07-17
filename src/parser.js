@@ -11,99 +11,30 @@ const parser = (testUrl) => {
     if (!value) {
       return;
     }
-
+    const checkedValue = checkValue(value);
     const haveDot = name.indexOf(".");
 
     if (haveDot === -1) {
-      switch (true) {
-        case value[0] === '"' && value[value.length - 1] === '"':
-          return (urlParams[name] = value.replace(/['"]+/g, ""));
-        case !isNaN(Number(value)):
-          return (urlParams[name] = Number(value));
-        case value === "true":
-          return (urlParams[name] = true);
-        case value === "false":
-          return (urlParams[name] = false);
-        default:
-          return (urlParams[name] = value);
-      }
+      return (urlParams[name] = checkedValue);
     }
 
     const arrWithDot = name.split(".");
 
     if (arrWithDot.length === 2) {
-      switch (true) {
-        case value[0] === '"' && value[value.length - 1] === '"':
-          return (urlParams[arrWithDot[0]] = {
-            ...urlParams[arrWithDot[0]],
-            [arrWithDot[1]]: value.replace(/['"]+/g, ""),
-          });
-        case !isNaN(Number(value)):
-          return (urlParams[arrWithDot[0]] = {
-            ...urlParams[arrWithDot[0]],
-            [arrWithDot[1]]: Number(value),
-          });
-        case value === "true":
-          return (urlParams[arrWithDot[0]] = {
-            ...urlParams[arrWithDot[0]],
-            [arrWithDot[1]]: true,
-          });
-        case value === "false":
-          return (urlParams[arrWithDot[0]] = {
-            ...urlParams[arrWithDot[0]],
-            [arrWithDot[1]]: false,
-          });
-        default:
-          return (urlParams[arrWithDot[0]] = {
-            ...urlParams[arrWithDot[0]],
-            [arrWithDot[1]]: value,
-          });
-      }
+      return (urlParams[arrWithDot[0]] = {
+        ...urlParams[arrWithDot[0]],
+        [arrWithDot[1]]: checkedValue,
+      });
     }
 
     if (arrWithDot.length === 3) {
       const secondObj = arrWithDot.reduce((acc) => {
-        switch (true) {
-          case value[0] === '"' && value[value.length - 1] === '"':
-            return {
-              ...acc,
-              [arrWithDot[1]]: {
-                [arrWithDot[2]]: value.replace(/['"]+/g, ""),
-              },
-            };
-          case !isNaN(Number(value)):
-            return {
-              ...acc,
-              [arrWithDot[1]]: {
-                ...acc[arrWithDot[1]],
-                [arrWithDot[2]]: Number(value),
-              },
-            };
-
-          case value === "true":
-            return {
-              ...acc,
-              [arrWithDot[1]]: {
-                [arrWithDot[2]]: true,
-              },
-            };
-
-          case value === "false":
-            return {
-              ...acc,
-              [arrWithDot[1]]: {
-                [arrWithDot[2]]: false,
-              },
-            };
-
-          default:
-            return {
-              ...acc,
-              [arrWithDot[1]]: {
-                [arrWithDot[2]]: value,
-              },
-            };
-        }
+        return {
+          ...acc,
+          [arrWithDot[1]]: {
+            [arrWithDot[2]]: checkedValue,
+          },
+        };
       }, {});
 
       return (urlParams[arrWithDot[0]] = {
@@ -117,6 +48,19 @@ const parser = (testUrl) => {
 
   return Object.keys(urlParams)[0] ? urlParams : null;
 };
+
+//* check type of value
+function checkValue(value) {
+  if (value[0] === '"' && value[value.length - 1] === '"') {
+    return value.replace(/['"]+/g, "");
+  } else if (!isNaN(Number(value))) {
+    return Number(value);
+  } else if (value === "true" || value === "false") {
+    return Boolean(value);
+  }
+  return value;
+}
+//*
 
 //* validation NEW
 function validURL(str) {
